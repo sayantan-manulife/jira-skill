@@ -1,0 +1,8 @@
+{
+  "client_id": "YOUR_OAUTH_CLIENT_ID",
+  "client_secret": "YOUR_OAUTH_CLIENT_SECRET",
+  "callback_url": "http://localhost:8080/callback",
+  "cloud_id": "YOUR_ATLASSIAN_CLOUD_ID",
+  "base_url": "https://YOUR-SITE.atlassian.net",
+  "jira_refresh_token": ""
+}

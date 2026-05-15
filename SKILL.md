@@ -22,37 +22,38 @@ Interact with any Atlassian Jira Cloud instance via REST API using OAuth 2.0 (3L
 
 ## Setup
 
-### 1. Create an OAuth App
+Full setup instructions are in [README.md](README.md). Summary:
 
-1. Go to https://developer.atlassian.com/console/myapps/
-2. Create a new OAuth 2.0 (3LO) app
-3. Add scopes: `read:jira-work`, `write:jira-work`, `read:jira-user`, `offline_access`
-4. Set callback URL to `http://localhost:8080/callback`
+### 1. Register an OAuth 2.0 App
 
-### 2. Create Config
+1. Go to **https://developer.atlassian.com/console/myapps/**
+2. Click **Create** > **OAuth 2.0 integration**
+3. Under **Permissions**, add Jira scopes: `read:jira-work`, `write:jira-work`, `read:jira-user`
+4. Under **Authorization**, add OAuth 2.0 (3LO) with callback URL: `http://localhost:8080/callback`
+5. Under **Settings**, copy your **Client ID** and **Secret**
 
-Create a `config.json` in the skill directory (or set `JIRA_SKILL_CONFIG` env var):
+> The `offline_access` scope is requested automatically by `auth.py` to enable refresh tokens.
 
-```json
-{
-  "client_id": "YOUR_CLIENT_ID",
-  "client_secret": "YOUR_CLIENT_SECRET",
-  "callback_url": "http://localhost:8080/callback",
-  "cloud_id": "YOUR_CLOUD_ID",
-  "base_url": "https://YOUR-SITE.atlassian.net",
-  "jira_refresh_token": ""
-}
-```
+### 2. Find Your Cloud ID
 
-To find your Cloud ID, visit: `https://YOUR-SITE.atlassian.net/_edge/tenant_info`
+Visit `https://YOUR-SITE.atlassian.net/_edge/tenant_info` and copy the `cloudId` value.
 
-### 3. Authenticate
+### 3. Configure
 
 ```bash
-python scripts/auth.py --config path/to/config.json
+cp config.example.json config.json
+# Edit config.json with your client_id, client_secret, cloud_id, and base_url
 ```
 
-This opens a browser for OAuth consent. After approving, the refresh token is saved to config. You only need to do this once (tokens auto-rotate and last ~90 days).
+Or set `JIRA_SKILL_CONFIG` env var pointing to a config file stored elsewhere.
+
+### 4. Authenticate (One-Time)
+
+```bash
+python scripts/auth.py
+```
+
+Opens a browser for OAuth consent. After approving, the refresh token is saved to `config.json`. You only need to do this once - tokens auto-rotate on every API call and last ~90 days without use.
 
 ## Available Scripts
 
